@@ -100,12 +100,12 @@ public abstract class WatsonServiceTest {
 		Logger root = (Logger)LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 		root.setLevel(Level.OFF);
 
-//		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-//		System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-//		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
-//		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "debug");
-//		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.impl.conn", "debug");
-//		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.impl.client", "debug");
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "debug");
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.impl.conn", "debug");
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.impl.client", "debug");
 	}
 
 }

@@ -15,33 +15,36 @@
  */
 package com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models;
 
-import static com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.ApiConstants.ERROR_MESSAGE;
+import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
 import com.ibm.watson.developer_cloud.service.model.GenericModel;
 
 /**
- * Error class for remote failures.
+ * Contains a list of {@link Ranker} objects
  *
- * Meant to copy Solr's error format.
+ * @author Kazi S. Hasan (kshasan@us.ibm.com)
+ * @version v1
  */
 
-public class RemoteError extends GenericModel {
-    @SerializedName(ERROR_MESSAGE)
-    private final String message;
-    private final int code;
+public class Rankers extends GenericModel {
+	/** List of rankers */
+	private List<Ranker> rankers;
+	
+	/**
+	 * Returns the rankers.
+	 *
+	 * @return the list of Ranker objects
+	 */
+	public List<Ranker> getRanker() {
+		return rankers;
+	}
 
-    public RemoteError(String message, int code) {
-        this.message = message;
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
+	/**
+	 * Sets the list of rankers.
+	 *
+	 * @param rankers the rankers to set
+	 */
+	public void setRankers(List<Ranker> rankers) {
+		this.rankers = rankers;
+	}
 }
