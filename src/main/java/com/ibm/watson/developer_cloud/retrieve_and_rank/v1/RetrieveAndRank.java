@@ -24,6 +24,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+
 import com.google.gson.JsonObject;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.Ranker;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.Rankers;
@@ -34,7 +35,15 @@ import com.ibm.watson.developer_cloud.util.GsonSingleton;
 import com.ibm.watson.developer_cloud.util.ResponseUtil;
 
 /**
- *
+ * This class provides a set of methods that allow a user to use the ranker API. 
+ * Specifically, it contains methods that call the following ranker API methods.
+ * 
+ * - Create ranker
+ * - Get rankers
+ * - Get status
+ * - Delete ranker
+ * - Rank
+ * 
  * @author Kazi S. Hasan (kshasan@us.ibm.com)
  * @version v1
  */
@@ -42,6 +51,13 @@ import com.ibm.watson.developer_cloud.util.ResponseUtil;
 public class RetrieveAndRank extends WatsonService {
 	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(RetrieveAndRank.class.getName());
+	
+	/** Path variables */
+	private static final String CREATE_RANKER_PATH = "/v1/rankers";
+	private static final String GET_RANKERS_PATH = "/v1/rankers";
+	private static final String GET_RANKER_PATH = "/v1/rankers/";
+	private static final String DELETE_RANKER_PATH = "/v1/rankers/";
+	private static final String RANK_PATH = "/v1/rankers/%s/rank";
 	
 	/**
 	 * Instantiates a new ranker client.
@@ -57,10 +73,10 @@ public class RetrieveAndRank extends WatsonService {
 	 * @param name
 	 *            Name of the ranker
 	 * @param trainingFile
-	 *            A file with the set of instances (i.e., qid and feature values) and 
-	 *            their rank (i.e., ground truth) used to train the ranker
+	 *            A file with the training data i.e., the set of 
+	 *            (qid, feature values, and rank) tuples
 	 *            
-	 * @return the ranker
+	 * @return the ranker object
 	 * @see Ranker
 	 */
 	public Ranker createRanker(final String name, final File trainingFile) {
@@ -73,19 +89,17 @@ public class RetrieveAndRank extends WatsonService {
 			contentJson.addProperty("name", name);
 		}
 		
+		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+		builder.addBinaryBody("training_data", trainingFile);
+		builder.addTextBody("training_metadata", contentJson.toString(), ContentType.TEXT_PLAIN);
+		HttpEntity reqEntity = builder.build();
+		
 		try {
-			MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-			builder.addTextBody("training_metadata",contentJson.toString(), ContentType.TEXT_PLAIN);
-			builder.addBinaryBody("training_data", trainingFile);
-			HttpEntity reqEntity = builder.build();
-			
-			HttpRequestBase request = Request.Post("/v1/rankers").withEntity(reqEntity).build();
+			HttpRequestBase request = Request.Post(CREATE_RANKER_PATH).withEntity(reqEntity).build();
 		
 			HttpResponse response = execute(request);
-			String rankerAsJson = ResponseUtil.getString(response);
-			System.out.println(rankerAsJson);
-			Ranker ranker = GsonSingleton.getGson().fromJson(rankerAsJson, Ranker.class);
-			return ranker;
+			String json = ResponseUtil.getString(response);
+			return GsonSingleton.getGson().fromJson(json, Ranker.class);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} 
@@ -98,9 +112,9 @@ public class RetrieveAndRank extends WatsonService {
 	 * @see Ranker
 	 */
 	public Rankers getRankers() {
-		HttpRequestBase request = Request.Get("/v1/rankers").build();
-
 		try {
+			HttpRequestBase request = Request.Get(GET_RANKERS_PATH).build();
+			
 			HttpResponse response = execute(request);
 			return ResponseUtil.getObject(response, Rankers.class);
 		} catch (IOException e) {
@@ -109,7 +123,7 @@ public class RetrieveAndRank extends WatsonService {
 	}
 	
 	/**
-	 * Retrieves the status of a classifier.
+	 * Retrieves the status of a ranker.
 	 * 
 	 * @param rankerID
 	 *            the ranker ID
@@ -120,9 +134,9 @@ public class RetrieveAndRank extends WatsonService {
 		if (rankerID == null || rankerID.isEmpty())
 			throw new IllegalArgumentException("rankerID can not be null or empty");
 
-		HttpRequestBase request = Request.Get("/v1/rankers/" + rankerID).build();
-
 		try {
+			HttpRequestBase request = Request.Get(GET_RANKER_PATH + rankerID).build();
+			
 			HttpResponse response = execute(request);
 			return ResponseUtil.getObject(response, Ranker.class);
 		} catch (IOException e) {
@@ -141,12 +155,16 @@ public class RetrieveAndRank extends WatsonService {
 		if (rankerID == null || rankerID.isEmpty())
 			throw new IllegalArgumentException("rankerID can not be null or empty");
 
-		HttpRequestBase request = Request.Delete("/v1/rankers/" + rankerID).build();
-		executeWithoutResponse(request);
+		try {
+			HttpRequestBase request = Request.Delete(DELETE_RANKER_PATH + rankerID).build();
+			executeWithoutResponse(request);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	/**
-	 * Returns the ranked answers returned by the ranker.
+	 * Gets and returns the ranked answers.
 	 * 
 	 * @param rankerID
 	 *            The ranker ID
@@ -165,18 +183,14 @@ public class RetrieveAndRank extends WatsonService {
 		builder.addBinaryBody("answer_data", testFile);
 		HttpEntity reqEntity = builder.build();
 		
-		String path = String.format("/v1/retrieve-and-rank/%s/rank", rankerID);
-
-		HttpRequestBase request = Request.Post(path).withEntity(reqEntity).build();
+		String path = String.format(RANK_PATH, rankerID);
 
 		try {
-			System.out.println("1");
+			HttpRequestBase request = Request.Post(path).withEntity(reqEntity).build();
+			
 			HttpResponse response = execute(request);
-			System.out.println("2");
-			if(response == null) System.out.println("3");
-			String rankerAsJson = ResponseUtil.getString(response);
-			System.out.println("4 = " + rankerAsJson);
-			Ranking ranking = GsonSingleton.getGson().fromJson(rankerAsJson, Ranking.class);
+			String rankingAsJson = ResponseUtil.getString(response);
+			Ranking ranking = GsonSingleton.getGson().fromJson(rankingAsJson, Ranking.class);
 			
 			return ranking;
 		} catch (IOException e) {

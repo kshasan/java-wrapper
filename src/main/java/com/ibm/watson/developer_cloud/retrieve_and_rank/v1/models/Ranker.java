@@ -22,7 +22,7 @@ import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.RetrieveAndRank;
 import com.ibm.watson.developer_cloud.service.model.GenericModel;
 
 /**
- * Ranker used by {@link RetrieveAndRank}
+ * {@link Ranker} class used by {@link RetrieveAndRank}
  *
  * @author Kazi S. Hasan (kshasan@us.ibm.com)
  * @version v1
@@ -130,9 +130,10 @@ public class Ranker extends GenericModel {
 	}
 
 	/**
-	 * Sets the created.
+	 * Sets the date when the ranker was created
 	 *
-	 * @param created the created to set
+	 * @param created 
+	 * 				the date to set
 	 */
 	public void setCreated(Date created) {
 		this.created = created;
@@ -151,7 +152,8 @@ public class Ranker extends GenericModel {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the name to set
+	 * @param name 
+	 * 			  the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;

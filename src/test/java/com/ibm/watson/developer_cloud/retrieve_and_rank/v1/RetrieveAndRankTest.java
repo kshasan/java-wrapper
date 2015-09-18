@@ -16,6 +16,7 @@
 package com.ibm.watson.developer_cloud.retrieve_and_rank.v1;
 
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.Assert;
@@ -27,7 +28,7 @@ import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.Ranker;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.Ranking;
 
 /**
- * This class includes a set of methods to test the ranker client
+ * This class includes a set of methods to test the {@link RetrieveAndRank} class.
  *
  * @author Kazi S. Hasan (kshasan@us.ibm.com)
  * @version v1
@@ -61,8 +62,12 @@ public class RetrieveAndRankTest extends WatsonServiceTest {
     }
 	
     /**
-     * An end-to-end test of the ranker client
-     * Creates an ranker, checks its status, sends queries to it, and finally deletes the ranker.
+     * An end-to-end test which
+     * - Creates a ranker
+     * - Checks its status
+     * - Get the list of rankers for the user
+     * - Sends a query to the ranker created in the first step and 
+     * - Deletes the ranker.
      */
     @Test
     public void testRanker() {
@@ -77,7 +82,7 @@ public class RetrieveAndRankTest extends WatsonServiceTest {
     	System.out.println("ranker id = " + ranker.getId());
     	
     	/**
-    	 * check its status to know if it has finished training
+    	 * keep checking its status until it has finished training
     	 */
     	while(true){
     		String status = client.getRankerStatus(ranker.getId()).getStatus().toString();
@@ -91,10 +96,10 @@ public class RetrieveAndRankTest extends WatsonServiceTest {
                 break;
             }
             try {
-				Thread.sleep(1000);
+            	/** wait time between two checks */
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.log(Level.SEVERE,"Error getting ranker status", e);
 			}
     	}
     	
@@ -110,11 +115,11 @@ public class RetrieveAndRankTest extends WatsonServiceTest {
     	Assert.assertNotNull(ranking);
     	Assert.assertNotNull(ranking.getTopAnswer());
     	Assert.assertNotNull(ranking.getAnswers());
+    	System.out.println("top answer = " + ranking.getTopAnswer());
     	
     	/**
     	 * delete the ranker
     	 */
-    	//client.deleteRanker("D42E5E-rank-24");
     	client.deleteRanker(ranker.getId());
     }
 }

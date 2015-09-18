@@ -71,6 +71,7 @@ public class RankedAnswer extends GenericModel {
 	 * Sets the score of the candidate answer.
 
 	 * @param score
+	 * 			the score to set
 	 */
 	public void setScore(double score) {
 		this.score = score;
@@ -89,6 +90,7 @@ public class RankedAnswer extends GenericModel {
 	/**
 	 * Sets the confidence that Watson has in this answer's ranking
 	 * Higher values represent higher confidences.
+	 * 
 	 * @param confidence
 	 *            the new confidence
 	 */

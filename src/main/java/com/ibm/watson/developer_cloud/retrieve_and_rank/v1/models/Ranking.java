@@ -22,7 +22,7 @@ import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.RetrieveAndRank;
 import com.ibm.watson.developer_cloud.service.model.GenericModel;
 
 /**
- * Ranking class used by the {@link RetrieveAndRank} class
+ * {@link Ranking} used by the {@link RetrieveAndRank} class
  *
  * @author Kazi S. Hasan (kshasan@us.ibm.com)
  * @version v1
