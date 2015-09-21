@@ -16,6 +16,9 @@
 package com.ibm.watson.developer_cloud.retrieve_and_rank.v1;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,10 +79,15 @@ public class RetrieveAndRankTest extends WatsonServiceTest {
     	/**
     	 * create the ranker
     	 */
-    	Ranker ranker = client.createRanker(rankerName, new File(TRAINING_FILE));
-    	Assert.assertNotNull(ranker);
-    	Assert.assertNotNull(ranker.getId());
-    	System.out.println("ranker id = " + ranker.getId());
+    	Ranker ranker = null;
+    	try(InputStream trainingFile = new FileInputStream(new File(TRAINING_FILE))) {
+	    	ranker = client.createRanker(rankerName, trainingFile);
+	    	Assert.assertNotNull(ranker);
+	    	Assert.assertNotNull(ranker.getId());
+	    	System.out.println("ranker id = " + ranker.getId());
+    	} catch(IOException e) {
+    		log.log(Level.SEVERE,"Error while creating ranker", e);
+    	}
     	
     	/**
     	 * keep checking its status until it has finished training
@@ -109,13 +117,27 @@ public class RetrieveAndRankTest extends WatsonServiceTest {
     	Assert.assertNotNull(client.getRankers());
     	
     	/**
-    	 * rank an test instance
+    	 * rank test instances
     	 */
-    	Ranking ranking = client.rank(ranker.getId(), new File(TEST_FILE));
-    	Assert.assertNotNull(ranking);
-    	Assert.assertNotNull(ranking.getTopAnswer());
-    	Assert.assertNotNull(ranking.getAnswers());
-    	System.out.println("top answer = " + ranking.getTopAnswer());
+    	try(InputStream testFile = new FileInputStream(new File(TEST_FILE))) {
+    		//calling rank with -1 so that the default number of top answers are returned
+	    	Ranking ranking = client.rank(ranker.getId(), testFile, -1);
+	    	Assert.assertNotNull(ranking);
+	    	Assert.assertNotNull(ranking.getTopAnswer());
+	    	System.out.println("top answer = " + ranking.getTopAnswer());
+    	} catch(IOException e) {
+    		log.log(Level.SEVERE,"Error ranking test instances", e);
+    	}
+    	
+    	try(InputStream testFile = new FileInputStream(new File(TEST_FILE))) {
+	    	//another call with a valid number for top answers
+	    	int topAnswers = 5;
+	    	Ranking ranking = client.rank(ranker.getId(), testFile, topAnswers);
+	    	Assert.assertNotNull(ranking);
+	    	Assert.assertNotNull(ranking.getAnswers());
+    	} catch(IOException e) {
+    		log.log(Level.SEVERE,"Error ranking test instances", e);
+    	}
     	
     	/**
     	 * delete the ranker

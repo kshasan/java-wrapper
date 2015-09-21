@@ -15,8 +15,8 @@
  */
 package com.ibm.watson.developer_cloud.retrieve_and_rank.v1;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpEntity;
@@ -73,15 +73,15 @@ public class RetrieveAndRank extends WatsonService {
 	 * @param name
 	 *            Name of the ranker
 	 * @param trainingFile
-	 *            A file with the training data i.e., the set of 
+	 *            An InputStream with the training data i.e., the set of 
 	 *            (qid, feature values, and rank) tuples
 	 *            
 	 * @return the ranker object
 	 * @see Ranker
 	 */
-	public Ranker createRanker(final String name, final File trainingFile) {
-		if (trainingFile == null || !trainingFile.exists())
-			throw new IllegalArgumentException("trainingFile does not exist or is null");
+	public Ranker createRanker(final String name, final InputStream trainingFile) {
+		if (trainingFile == null)
+			throw new IllegalArgumentException("trainingFile is null");
 		
 		JsonObject contentJson = new JsonObject();
 
@@ -169,18 +169,24 @@ public class RetrieveAndRank extends WatsonService {
 	 * @param rankerID
 	 *            The ranker ID
 	 * @param testFile
-	 *            The file with the list of test instances to rank
+	 *            The InputStream with the test instances to rank
+	 * @param topAnswers
+	 *            The number of top answers needed, default is 10
 	 * @return the ranking of the answers
 	 */
-	public Ranking rank(final String rankerID, final File testFile) {
+	public Ranking rank(final String rankerID, final InputStream testFile, int topAnswers) {
 		if (rankerID == null || rankerID.isEmpty())
 			throw new IllegalArgumentException("rankerID can not be null or empty");
 		
-		if (testFile == null || !testFile.exists())
-			throw new IllegalArgumentException("testFile does not exist or is null");
-
+		if (testFile == null)
+			throw new IllegalArgumentException("testFile is null");
+		
+		JsonObject contentJson = new JsonObject();
+		contentJson.addProperty("answers", (topAnswers>0)? topAnswers : 10);
+		
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 		builder.addBinaryBody("answer_data", testFile);
+		builder.addTextBody("answer_metadata", contentJson.toString(), ContentType.TEXT_PLAIN);
 		HttpEntity reqEntity = builder.build();
 		
 		String path = String.format(RANK_PATH, rankerID);
