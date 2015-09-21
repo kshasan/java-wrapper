@@ -135,6 +135,8 @@ public class RetrieveAndRankTest extends WatsonServiceTest {
 	    	Ranking ranking = client.rank(ranker.getId(), testFile, topAnswers);
 	    	Assert.assertNotNull(ranking);
 	    	Assert.assertNotNull(ranking.getAnswers());
+	    	//Assert.assertEquals("Top answers expected = " + topAnswers + ", returned = " + 
+	    	//		ranking.getAnswers().size(), topAnswers, ranking.getAnswers().size());
     	} catch(IOException e) {
     		log.log(Level.SEVERE,"Error ranking test instances", e);
     	}
