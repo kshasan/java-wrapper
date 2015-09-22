@@ -114,6 +114,9 @@
 					</execution>
 				</executions>
 				<configuration>
+					<descriptors>
+						<descriptor>src/assemble/with-dependencies.xml</descriptor>
+					</descriptors>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
