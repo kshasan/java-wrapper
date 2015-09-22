@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package java.com.ibm.watson.developer_cloud.retrieve_and_rank.v1;
+package com.ibm.watson.developer_cloud.retrieve_and_rank.v1;
 
+import java.com.ibm.watson.developer_cloud.retrieve_and_rank.v1.RetrieveAndRankSolrClusterCreateAndListExample;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -38,7 +39,7 @@ public class RetrieveAndRankSolrHttpClientExample {
      * {@link RetrieveAndRankSolrClusterCreateAndListExample}.
      */
     private static final String SERVICE_URL =
-            "{your-base-url}/retrieve-and-rank/api/v1/solr_clusters/{your-cluster-id}";
+            "https://gateway.watsonplatform.net/retrieve-and-rank/api/v1/solr_clusters/{your-cluster-id}";
 
     /**
      * The username for your Watson Solr search service.
@@ -53,13 +54,13 @@ public class RetrieveAndRankSolrHttpClientExample {
     /**
      * The name of the collection to create, index data into, and search.
      */
-    private static final String COLLECTION_NAME = "watson_solr_client_example_collection";
+    private static final String COLLECTION_NAME = "solr_client_example_collection";
 
     /**
      * The name of the configuration to use to create the collection. This example uploads the configuration with this
      * name and then later creates the collection referencing the configuration's name.
      */
-    private static final String CONFIG_NAME = "test_config";
+    private static final String CONFIG_NAME = "example_config";
 
     /**
      * The location of the Solr collection configuration files to upload.
@@ -178,6 +179,6 @@ public class RetrieveAndRankSolrHttpClientExample {
     }
 
     private RetrieveAndRankSolrHttpClientExample() {
-        throw new UnsupportedOperationException("WatsonSolrClientExample example cannot be instantiated!");
+        throw new UnsupportedOperationException("RetrieveAndRankSolrHttpClientExample example cannot be instantiated!");
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package java.com.ibm.watson.developer_cloud.retrieve_and_rank.v1;
+package com.ibm.watson.developer_cloud.retrieve_and_rank.v1;
 
 import java.net.URI;
 
@@ -24,7 +24,7 @@ public class RetrieveAndRankSolrClusterDeleteExample {
     /**
      * The URL of the Watson Solr search service.
      */
-    private static final String SERVICE_URL = "{your-base-url}/retrieve-and-rank/api/v1";
+    private static final String SERVICE_URL = "https://gateway.watsonplatform.net/retrieve-and-rank/api/v1";
 
     /**
      * The username for your Watson Solr search service.
@@ -39,7 +39,7 @@ public class RetrieveAndRankSolrClusterDeleteExample {
     /**
      * The Solr cluster ID of the Solr cluster to delete
      */
-    private static String SOLR_CLUSTER_ID = "your-solr-cluster-id";
+    private static final String SOLR_CLUSTER_ID = "your-solr-cluster-id";
 
     private static HttpClusterLifecycleClient clusterLifecycleClient;
 
@@ -75,6 +75,7 @@ public class RetrieveAndRankSolrClusterDeleteExample {
     }
 
     private RetrieveAndRankSolrClusterDeleteExample() {
-        throw new UnsupportedOperationException("WatsonSolrClusterDeleteExample example cannot be instantiated!");
+        throw new UnsupportedOperationException(
+                "RetrieveAndRankSolrClusterDeleteExample example cannot be instantiated!");
     }
 }

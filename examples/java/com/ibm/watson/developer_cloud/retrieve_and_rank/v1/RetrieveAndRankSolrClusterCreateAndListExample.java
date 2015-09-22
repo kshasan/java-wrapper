@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package java.com.ibm.watson.developer_cloud.retrieve_and_rank.v1;
+package com.ibm.watson.developer_cloud.retrieve_and_rank.v1;
 
 import java.net.URI;
 
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.HttpClusterLifecycleClient;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.SolrCluster;
+import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.SolrClusterCreationRequest;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.SolrClusterListResponse;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.SolrClusterResponse;
 
@@ -26,7 +27,7 @@ public class RetrieveAndRankSolrClusterCreateAndListExample {
     /**
      * The URL of the Watson Solr search service.
      */
-    private static final String SERVICE_URL = "{your-base-url}/retrieve-and-rank/api/v1";
+    private static final String SERVICE_URL = "https://gateway.watsonplatform.net/retrieve-and-rank/api/v1";
 
     /**
      * The username for your Watson Solr search service.
@@ -37,6 +38,17 @@ public class RetrieveAndRankSolrClusterCreateAndListExample {
      * The password for your Watson Solr search service.
      */
     private static final String PASSWORD = "your-password";
+
+    /**
+     * A label you can use to differentiate your cluster in responses.
+     */
+    private static final String CLUSTER_NAME = "example_cluster";
+
+    /**
+     * The size of the Solr cluster to create. The empty string will create a free cluster. Otherwise specify an integer
+     * number of units to create a cluster of that size.
+     */
+    private static final String CLUSTER_SIZE = "";
 
     private static HttpClusterLifecycleClient clusterLifecycleClient;
 
@@ -61,7 +73,8 @@ public class RetrieveAndRankSolrClusterCreateAndListExample {
      */
     private static void createSolrCluster() {
         System.out.println("Creating Solr cluster...");
-        final SolrClusterResponse response = clusterLifecycleClient.createSolrCluster();
+        final SolrClusterCreationRequest clusterOptions = new SolrClusterCreationRequest(CLUSTER_NAME, CLUSTER_SIZE);
+        final SolrClusterResponse response = clusterLifecycleClient.createSolrCluster(clusterOptions);
 
         solrClusterId = response.getSolrClusterId();
         System.out.println("Solr cluster creation request submitted. ID: " + solrClusterId + "");
@@ -95,9 +108,8 @@ public class RetrieveAndRankSolrClusterCreateAndListExample {
     private static void listAllSolrClusters() {
         System.out.println("Listing all Solr clusters...");
         final SolrClusterListResponse solrClustersListResponse = clusterLifecycleClient.listSolrClusters();
-
         for (final SolrClusterResponse solrCluster : solrClustersListResponse.getSolrClusterResponses()) {
-            System.out.println("Found Solr cluster with ID: " + solrCluster.getSolrClusterId());
+            System.out.println(solrCluster.toString());
         }
     }
 
@@ -112,6 +124,6 @@ public class RetrieveAndRankSolrClusterCreateAndListExample {
 
     private RetrieveAndRankSolrClusterCreateAndListExample() {
         throw new UnsupportedOperationException(
-                "WatsonSolrClusterCreateAndListExample example cannot be instantiated!");
+                "RetrieveAndRankSolrClusterCreateAndListExample example cannot be instantiated!");
     }
 }
