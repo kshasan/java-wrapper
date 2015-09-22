@@ -65,7 +65,8 @@ public class RetrieveAndRankSolrHttpClientExample {
     /**
      * The location of the Solr collection configuration files to upload.
      */
-    private static final String CONFIG_DIRECTORY = "your-configuration-directory";
+    private static final String CONFIG_DIRECTORY =
+            "examples/java/com/ibm/watson/developer_cloud/retrieve_and_rank/v1/config";
 
     private static final String QUERY_MATCHING_ANY_DOCUMENT = "*:*";
 
