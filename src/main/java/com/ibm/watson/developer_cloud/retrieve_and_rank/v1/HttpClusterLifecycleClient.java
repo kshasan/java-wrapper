@@ -83,11 +83,6 @@ public class HttpClusterLifecycleClient implements AutoCloseable, ClusterLifecyc
     }
 
     @Override
-    public void deleteSolrClusters() {
-        clusterLifecycleRestSender.deleteSolrClusters();
-    }
-
-    @Override
     public SolrClusterListResponse listSolrClusters() {
         return clusterLifecycleRestSender.listSolrClusters();
     }

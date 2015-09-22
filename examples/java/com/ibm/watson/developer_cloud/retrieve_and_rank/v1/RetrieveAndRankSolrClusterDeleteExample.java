@@ -41,11 +41,6 @@ public class RetrieveAndRankSolrClusterDeleteExample {
      */
     private static String SOLR_CLUSTER_ID = "your-solr-cluster-id";
 
-    /**
-     * Whether to delete all Solr clusters associated with the service instance
-     */
-    private static boolean DELETE_ALL_SOLR_CLUSTERS = false;
-
     private static HttpClusterLifecycleClient clusterLifecycleClient;
 
     public static void main(String[] args) {
@@ -53,9 +48,6 @@ public class RetrieveAndRankSolrClusterDeleteExample {
 
         try {
             deleteSolrCluster();
-            if (DELETE_ALL_SOLR_CLUSTERS) {
-                deleteAllSolrClusters();
-            }
         } catch (final Exception e) {
             e.printStackTrace();
         } finally {
@@ -71,15 +63,6 @@ public class RetrieveAndRankSolrClusterDeleteExample {
         clusterLifecycleClient.deleteSolrCluster(SolrCluster.fromString(SOLR_CLUSTER_ID));
 
         System.out.println("Deleted Solr cluster.");
-    }
-
-    /**
-     * Deletes all Solr clusters associated with this instance of the service.
-     */
-    private static void deleteAllSolrClusters() {
-        System.out.println("Deleting all Solr clusters...");
-        clusterLifecycleClient.deleteSolrClusters();
-        System.out.println("Deleted all Solr clusters.");
     }
 
     /**
