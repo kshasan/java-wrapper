@@ -42,11 +42,6 @@ public interface ClusterLifecycleClient {
     void deleteSolrCluster(SolrCluster solrCluster);
 
     /**
-     * Deletes all Solr clusters currently associated with the service instance.
-     */
-    void deleteSolrClusters();
-
-    /**
      * Checks whether a provided Solr cluster is ready for use.
      */
     SolrClusterResponse pollSolrCluster(SolrCluster solrCluster);

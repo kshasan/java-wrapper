@@ -87,20 +87,6 @@ public class ClusterLifecycleRestSender {
         }
     }
 
-    public void deleteSolrClusters() {
-        final HttpDelete request = new HttpDelete(watsonSearchUrl);
-        try {
-            final HttpResponse response = client.execute(request);
-
-            if (!(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK)) {
-                throw new RuntimeException(
-                        generateErrorMessage(response, RetrieveAndRankMessages.ERROR_DELETING_CLUSTERS_1));
-            }
-        } catch (final IOException e) {
-            throw new RuntimeException(MSGS.format(ERROR_DELETING_CLUSTERS), e);
-        }
-    }
-
     public SolrClusterListResponse listSolrClusters() {
         final HttpUriRequest request = new HttpGet(watsonSearchUrl);
 
