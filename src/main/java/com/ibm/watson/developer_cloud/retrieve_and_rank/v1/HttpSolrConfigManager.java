@@ -24,8 +24,6 @@ import java.net.URI;
 import java.util.Collection;
 
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.utils.HttpClientFactory;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.utils.MessageFormatter;
@@ -36,7 +34,6 @@ import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.utils.SolrConfigRestS
  * Manages SolrCloud configuration.
  */
 public class HttpSolrConfigManager implements SolrConfigManager {
-    private static final Logger LOG = LoggerFactory.getLogger(HttpSolrConfigManager.class);
     private final MessageFormatter msgs = new MessageFormatter(bundleName());
 
     private final SolrConfigRestSender configUploader;
@@ -106,7 +103,7 @@ public class HttpSolrConfigManager implements SolrConfigManager {
             try {
                 createdHttpClient.close();
             } catch (final IOException e) {
-                LOG.error(msgs.format(UNABLE_TO_CLOSE_HTTP_CLIENT), e);
+                throw new RuntimeException(msgs.format(UNABLE_TO_CLOSE_HTTP_CLIENT), e);
             }
         }
     }

@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.net.URI;
 
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.SolrCluster;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.SolrClusterCreationRequest;
@@ -37,7 +35,6 @@ import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.utils.MessageFormatte
  * A client for managing Watson Search Service Solr clusters.
  */
 public class HttpClusterLifecycleClient implements AutoCloseable, ClusterLifecycleClient {
-    private static final Logger LOG = LoggerFactory.getLogger(HttpSolrConfigManager.class);
     private final MessageFormatter msgs = new MessageFormatter(bundleName());
 
     private final ClusterLifecycleRestSender clusterLifecycleRestSender;
@@ -99,7 +96,7 @@ public class HttpClusterLifecycleClient implements AutoCloseable, ClusterLifecyc
             try {
                 createdHttpClient.close();
             } catch (final IOException e) {
-                LOG.error(msgs.format(UNABLE_TO_CLOSE_HTTP_CLIENT), e);
+                throw new RuntimeException(msgs.format(UNABLE_TO_CLOSE_HTTP_CLIENT), e);
             }
         }
     }
