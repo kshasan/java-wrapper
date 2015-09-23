@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -37,10 +38,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Throwables;
+import com.ibm.watson.developer_cloud.alchemy.v1.util.PublicationDateTypeAdapter;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.RemoteError;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.SolrConfigList;
 
@@ -48,7 +48,7 @@ import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.models.SolrConfigList
  * Posts config to the Watson search service.
  */
 public class SolrConfigRestSender {
-    private static final Logger LOG = LoggerFactory.getLogger(SolrConfigRestSender.class);
+    private static final Logger LOG = Logger.getLogger(PublicationDateTypeAdapter.class.getName());
     private static final MessageFormatter MSGS = new MessageFormatter(bundleName());
 
     private final URI serviceUrl;
@@ -85,7 +85,7 @@ public class SolrConfigRestSender {
                 Files.delete(zipFile.toPath());
             } catch (final IOException e) {
                 zipFile.deleteOnExit();
-                LOG.warn(MSGS.format(FAILED_TO_DELETE_TEMP_2, zipFile.getPath(), e.getMessage()));
+                LOG.warning(MSGS.format(FAILED_TO_DELETE_TEMP_2, zipFile.getPath(), e.getMessage()));
             }
         }
     }
